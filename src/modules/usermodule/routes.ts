@@ -15,8 +15,10 @@ class Routes{
         // leera la iniformacion de un conjunto de usuarios
         app.route(`${this.routeparent}/users`).get(this.routesController.getUsers);
         //app.route(this.routeparent + "/users").get(this.routesController.getUsers);
+        app.route(`${this.routeparent}/users/:id`).put(this.routesController.updateUsers);
+        app.route(`${this.routeparent}/users/:id`).delete(this.routesController.removeUsers);
         // servicio para si un numero es primo
-        app.route(`${this.routeparent}/isPrime`).post(this.routesController.isPrime);
+        //app.route(`${this.routeparent}/isPrime`).post(this.routesController.isPrime);
     }
 }
 export default Routes;

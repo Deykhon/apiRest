@@ -2,19 +2,35 @@
 import express, {Express} from "express";// lo del corchetes es el tipo de dato (Express)
 import * as bodyParser from "body-parser" ;//bodyParse hace que todos los datos que viajan por http(binario) lo combierta a legible
 import UserModules from "./modules/usermodule/init";
+import mongoose, { Mongoose } from "mongoose";
 class App{
+
     public app: Express = express();
+    public  mongooseClient: Mongoose;  //variable universal para usar la base de datos
     constructor(){
         this.configuration();
         this.connectDatabase();
         this.initApp();
     }
     public connectDatabase(){
-        console.log("data base ready");
+        console.log("data ok");
+        // process.env es paraingresar alas variables de entorno del contenedor mongo
+        let host: string = process.env.DBHOST || "mongodb://172.18.0.2:27017";
+        let database: string = process.env.DATABASE || "seminario";
+        let connectionString: string = `${host}/${database}`;
+        mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true});
+        mongoose.connection.on("error", err => {
+            console.log("Connection Fail");
+            console.log(err);
+        });
+        mongoose.connection.on("open", () => {
+            console.log("Database connection success !!!");
+        });
+        this.mongooseClient = mongoose;
     }
     public configuration(){
         this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({extended: false})); // uusa la codificacion de url mas corta
+        this.app.use(bodyParser.urlencoded({extended: false})); // usa la codificacion de url mas corta
         
     }
     public initApp(){

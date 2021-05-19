@@ -11,7 +11,7 @@ services:
             - .:/opt/app         # el punto indica que el directorio de trabajo en visual studio
             - /opt/app/node_modules #se replica en el directorio opt/app
         environment: 
-            DBHOST: ""
+            DBHOST: "mongodb://172.18.0.2:27017"
             DATABASE: "seminario"
     rabbitmqcontainer:
         image: rabbitmq:3-management
