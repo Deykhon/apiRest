@@ -1,5 +1,6 @@
 import UserModule from "../init";
 import UsersModel, { IUser } from "../models/Users";
+import RolesModel, { IRoles }from "../models/Roles";
 class BusinessUser {
     constructor(){
 
@@ -10,9 +11,14 @@ class BusinessUser {
     //  promesa o pausa(async, await) hace que se espere el eventloop (de js)
     //  para recuperar los datos que vienen desde otro server(save.then  otra manera de recuperar)
     public async addUsers(user: IUser){
-        let userDb = new UsersModel(user);
-        let result = await userDb.save();   //  save,funcion para guardar un esquema
-        return result;
+        try{
+            let userDb = new UsersModel(user);
+            let result = await userDb.save();   //  save,funcion para guardar un esquema
+            return result;    
+        } catch (err){
+            return err;
+        }
+        
     }
     public async readUsers(){
         // find, funcion de consulta, para buscar un usuario
@@ -30,6 +36,39 @@ class BusinessUser {
         return result;
     }
     // hasta aqui video 7
-
+    // metodo para añadir un rol a un usuario en específico
+    public async addRol(idUs: string, idRol: string) {
+        let user = await UsersModel.findOne({ _id: idUs });
+        if (user != null){
+            var rol = await RolesModel.findOne({ _id: idRol });
+            if (rol != null) {
+                user.roles.push(rol);
+                return await user.save();
+            }
+            return null;
+        }
+        return null;
+    }
+    public async removeRol(idUs: string, idRol: string) {
+        let user = await UsersModel.findOne({ _id: idUs });
+        var rol = await RolesModel.findOne({ _id: idRol });
+        if(user != null && rol != null){
+            let newroles: Array<IRoles> = user.roles.filter((item: IRoles) => {
+                if(item.name == rol.name){
+                    // se hace comparacion por name y no por id xq id es asignado en la base de datos
+                    // busca en atributo name en roles de user y compara
+                    return false;
+                }
+                return true;
+            });
+            user.roles = newroles;
+            try{
+                return await user.save();
+            } catch (err) {
+                return err;
+            };
+        }
+        return null;
+    }
 }
 export default BusinessUser;

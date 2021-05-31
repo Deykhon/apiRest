@@ -10,6 +10,8 @@ class Routes{
         this.configureRoutes(app);
     }
     private configureRoutes(app: Express){
+        // -------------------USERS RuteS---------------------------------------------------
+
         //creara un usuario nuevo
         app.route(`${this.routeparent}/users`).post(this.routesController.createUsers);
         // leera la iniformacion de un conjunto de usuarios
@@ -17,6 +19,14 @@ class Routes{
         //app.route(this.routeparent + "/users").get(this.routesController.getUsers);
         app.route(`${this.routeparent}/users/:id`).put(this.routesController.updateUsers);
         app.route(`${this.routeparent}/users/:id`).delete(this.routesController.removeUsers);
+        app.route(`${this.routeparent}/addrol/:id`).put(this.routesController.addRol);
+        app.route(`${this.routeparent}/removerol/:id`).put(this.routesController.removeUserRol);
+        // -------------------------------ROLES ROUTES--------------------------------------
+
+        app.route(`${this.routeparent}/roles`).post(this.routesController.createRol);
+        app.route(`${this.routeparent}/roles`).get(this.routesController.listarRol);
+        app.route(`${this.routeparent}/roles/:id`).delete(this.routesController.removeRol);
+
         // servicio para si un numero es primo
         //app.route(`${this.routeparent}/isPrime`).post(this.routesController.isPrime);
     }

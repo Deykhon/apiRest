@@ -1,5 +1,5 @@
 //codigo inicial para la aplicacion
-import express, {Express} from "express";// lo del corchetes es el tipo de dato (Express)
+import express, {Express} from "express";// lo del corchetes es el tipo de dato (Express) tambien se pude especificar lo q se va a importar
 import * as bodyParser from "body-parser" ;//bodyParse hace que todos los datos que viajan por http(binario) lo combierta a legible
 import UserModules from "./modules/usermodule/init";
 import mongoose, { Mongoose } from "mongoose";
@@ -13,9 +13,9 @@ class App{
         this.initApp();
     }
     public connectDatabase(){
-        console.log("data ok");
+        console.log("data okey");
         // process.env es paraingresar alas variables de entorno del contenedor mongo
-        let host: string = process.env.DBHOST || "mongodb://172.18.0.2:27017";
+        let host: string = "mongodb://172.18.0.2:27017"; // || process.env.DBHOST
         let database: string = process.env.DATABASE || "seminario";
         let connectionString: string = `${host}/${database}`;
         mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true});
@@ -24,7 +24,7 @@ class App{
             console.log(err);
         });
         mongoose.connection.on("open", () => {
-            console.log("Database connection success !!!");
+            console.log("Datbase connection success !!!a!!");
         });
         this.mongooseClient = mongoose;
     }

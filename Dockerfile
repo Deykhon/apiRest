@@ -10,5 +10,5 @@ RUN npm install ts-node -g
 COPY . .
 EXPOSE 8000
 RUN npm install
-RUN npm run build
+RUN npm run dev
 CMD ["nodemon", "dist/server.js"]

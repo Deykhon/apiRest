@@ -2,6 +2,6 @@
  import app from "./app";
  const port = 8000;
  app.app.listen(port, () => {
-     console.log("SEVER RUNNIG IN PORT " + port);
+     console.log("SEVER RUNNIG IN Port " + port);
  });
  export default app;

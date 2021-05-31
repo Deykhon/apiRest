@@ -1,7 +1,9 @@
 import { Request, Response} from "express"; //Request y response son metodos la express
 import BusinessUser from "../businessController/BusinessUser";
+import BusinessRoles from "../businessController/BusinessRoles";
 import sha1 from "sha1";
 import { IUser } from "../models/Users";
+import { IRoles } from "../models/Roles";
 class RoutesController{
     constructor(){
         
@@ -39,8 +41,56 @@ class RoutesController{
         response.status(200).json({ serverResponse: result});
     }
     //  hasta aqui video 7
+    // addRol añade un rol a un usuario en específico
+    public async addRol(request: Request, response: Response){
+        let idUs: string = request.params.id;
+        let idRol = request.body.idRol;
+        if (idUs == null && idRol == null) {
+            response.status(300).json({ severResponse: "No se definió id de usuario ni id de rol" });
+            return;
+        }
+        var user: BusinessUser = new BusinessUser();
+        var result = await user.addRol(idUs, idRol);
+        if(result == null){
+            response.status(300).json({ serverResponse: "El rol o usuario no existe" });
+        }
+        response.status(200).json({ serverResponse: result });
+    }
+    //createRol para crear roles
+    public async createRol(request: Request, response: Response) {
+        let roles: BusinessRoles = new BusinessRoles();
+        var rolesData: any = request.body;
+        //var keys: Array<string> = Object.keys(rolesData);espara obtener los parametros del objeto
+        let result = await roles.createRol(rolesData);
+        if(result == null){
+            response.status(300).json({ serverResponse: "El rol tiene parametros no válidos"});
+            return;
+        }
+        response.status(201).json({ serverResponse: result });
 
-    public async isPrime(request: Request, response: Response){
+    }
+    // listar todos los roles
+    public async listarRol(req: Request, response: Response){
+        var rol: BusinessRoles = new BusinessRoles();
+        const resul: Array<IRoles> = await rol.listarRoles();
+        response.status(200).json({ serverResponse: resul });
+    }
+    public async removeRol(request: Request, response: Response){
+        let roles: BusinessRoles = new BusinessRoles();
+        let idRol: string = request.params.id;
+        // ?id=13; request.query.id
+        let result = await roles.deleteRol(idRol);
+        response.status(201).json({ serverResponse: result});
+    }
+    public async removeUserRol(request: Request, response: Response){
+        let roles: BusinessUser = new BusinessUser();
+        let idUs: string = request.params.id;
+        let idRol: string = request.body.idRol;
+        let result = await roles.removeRol(idUs, idRol);
+        response.status(201).json({ serverResponse: result});
+    }
+
+    /*public async isPrime(request: Request, response: Response){
         const data = request.body;          //reques.body es una peticion de tipo post. en body se almacena el post
         var number = Number(data.number);
         for(var i = 2; i < number / 2; i++){
@@ -50,6 +100,6 @@ class RoutesController{
         }
         return response.status(200).json( {number, msn: "Es primo"});
 
-    }
+    }*/
 }
 export default RoutesController;

@@ -23,11 +23,15 @@ services:
             - 15672:15672
             - 5672:5672
             - 5673:5673
+        logging: 
+            driver: none
     mongo:
         image: mongo
         ports: 
             - "27017:27017"
         volumes: 
             - mongodata:/data/db
+        logging: 
+            driver: none #para no ver los mensajes de log
 volumes: 
     mongodata:
