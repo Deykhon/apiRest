@@ -13,9 +13,9 @@ class App{
         this.initApp();
     }
     public connectDatabase(){
-        console.log("data okey");
+        console.log("database okey");
         // process.env es paraingresar alas variables de entorno del contenedor mongo
-        let host: string = "mongodb://172.18.0.2:27017"; // || process.env.DBHOST
+        let host: string = "mongodb://172.18.0.3:27017"; // || process.env.DBHOST
         let database: string = process.env.DATABASE || "seminario";
         let connectionString: string = `${host}/${database}`;
         mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true});

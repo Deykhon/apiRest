@@ -2,11 +2,44 @@ import { Request, Response} from "express"; //Request y response son metodos la 
 import BusinessUser from "../businessController/BusinessUser";
 import BusinessRoles from "../businessController/BusinessRoles";
 import sha1 from "sha1";
+import jsonwebtoken from "jsonwebtoken";
 import { IUser } from "../models/Users";
 import { IRoles } from "../models/Roles";
+
+interface Icredentials {
+    email: string;
+    password: string;
+}
 class RoutesController{
     constructor(){
         
+    }
+    public async login(request: Request, response: Response){
+        var credentials: Icredentials = request.body;
+        if (credentials.email == undefined) {
+            response.status(300).json({ serverResponse: "Es necesario el parametro email"});
+            return;
+        }
+        if (credentials.password == undefined) {
+            response.status(300).json({ serverResponse: "Es necesario el parametro password"});
+            return;
+        }
+        credentials.password = sha1(credentials.password);
+        const user: BusinessUser = new BusinessUser();
+        let result: Array<IUser> = await user.readUsers(credentials, 0, 1);
+        // si result es igual a uno es decir qe las credenciales son correctas y el usuario existe
+        if (result.length == 1) {
+            
+            var loginUser: IUser = result[0];
+            // la funcion sing es para firmar la credencial
+            var token: string = jsonwebtoken.sign(
+                { id: loginUser._id, email: loginUser }, "secret"
+            );
+            response.status(200).json({ 
+                serverRsponse: { email: loginUser.email, username: loginUser.username, token }});
+             return;
+        }
+        response.status(200).json({ serverResponse: "credenciales incorrectas" });
     }
     public async createUsers(request: Request, response: Response) {
     //  return response.status(200).json( {server: "Hola mundo soy sms de post"});
